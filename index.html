@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>神経衰弱 - Rainbow Memory Match</title>
+    <link rel="stylesheet" href="style.css?v=2">
+    <!-- Google Fonts for modern design -->
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700&display=swap" rel="stylesheet">
+</head>
+
+<body>
+    <!-- レベル選択モーダル -->
+    <div id="level-selection" class="modal active">
+        <div class="modal-content">
+            <h1>🌷 蛍雪千里山寮 🌷</h1>
+            <p>Select a level and start the game.</p>
+            <div class="level-buttons">
+                <button class="btn level-btn" data-level="easy">Easy (4×4)</button>
+                <button class="btn level-btn" data-level="normal">Normal (5×4)</button>
+                <button class="btn level-btn" data-level="hard">Hard (6×4)</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ゲーム画面コンテナ -->
+    <div id="game-container" class="hidden">
+        <header>
+            <div class="stats">
+                <div class="stat-box">
+                    <span class="label">Time:</span>
+                    <span id="timer" class="value">00:00</span>
+                </div>
+                <div class="stat-box">
+                    <span class="label">Flips:</span>
+                    <span id="flips" class="value">0</span>
+                </div>
+            </div>
+            <button id="restart-btn" class="btn">リスタート</button>
+        </header>
+
+        <main>
+            <!-- ここにJavaScriptでカードが生成されます -->
+            <div id="game-board" class="board">
+            </div>
+        </main>
+    </div>
+
+    <!-- ゲームクリア時の祝福モーダル -->
+    <div id="game-over" class="modal hidden">
+        <div class="modal-content">
+            <h2>✨ ゲームクリア！ ✨</h2>
+            <p>タイム: <span id="final-time">00:00</span></p>
+            <p>試行回数: <span id="final-flips">0</span>回</p>
+            <button id="back-to-menu-btn" class="btn">レベル選択へ戻る</button>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,299 @@
+/* 基本リセットとフォント設定 */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Nunito', sans-serif;
+    /* パステル調の虹色グラデーション背景 */
+    background: linear-gradient(135deg, #ffcce6, #ffffcc, #ccffcc, #cce6ff, #e6ccff);
+    background-size: 400% 400%;
+    animation: rainbowBackground 15s ease infinite;
+    color: #555;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden; /* 背景アニメーションによるスクロールバー防止 */
+}
+
+/* 背景アニメーション */
+@keyframes rainbowBackground {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+/* ボタンの共通スタイル */
+.btn {
+    font-family: 'Nunito', sans-serif;
+    font-weight: 700;
+    font-size: 1.1rem;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 25px;
+    background-color: #fff;
+    color: #ff99cc;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+}
+
+.btn:active {
+    transform: translateY(0);
+}
+
+/* モーダルウィンドウ（レベル選択・クリア画面） */
+.modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(255, 255, 255, 0.6);
+    backdrop-filter: blur(5px);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 100;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+}
+
+.modal.active {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.modal.hidden {
+    display: none;
+}
+
+.modal-content {
+    background: rgba(255, 255, 255, 0.95);
+    padding: 40px;
+    border-radius: 20px;
+    text-align: center;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    max-width: 90%;
+}
+
+.modal-content h1 {
+    font-size: 2.5rem;
+    color: #ff99cc;
+    margin-bottom: 10px;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+}
+
+.modal-content h2 {
+    font-size: 2rem;
+    color: #66ccff;
+    margin-bottom: 20px;
+}
+
+.modal-content p {
+    font-size: 1.2rem;
+    margin-bottom: 30px;
+}
+
+.level-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.level-btn {
+    width: 100%;
+    font-size: 1.2rem;
+}
+.level-btn[data-level="easy"] { color: #99cc66; }
+.level-btn[data-level="normal"] { color: #ffcc66; }
+.level-btn[data-level="hard"] { color: #ff6666; }
+
+/* ゲームコンテナ */
+#game-container {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    max-width: 900px;
+    height: 100vh;
+    padding: 20px;
+}
+
+#game-container.hidden {
+    display: none;
+}
+
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+    background: rgba(255, 255, 255, 0.8);
+    padding: 10px 20px;
+    border-radius: 15px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+}
+
+.stats {
+    display: flex;
+    gap: 20px;
+}
+
+.stat-box {
+    font-size: 1.2rem;
+    font-weight: 700;
+}
+
+.stat-box .value {
+    color: #66ccff;
+}
+
+/* ゲームボード */
+main {
+    flex-grow: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: calc(100% - 80px); /* headerの高さを引く */
+}
+
+.board {
+    display: grid;
+    gap: 10px;
+    width: 100%;
+    height: 100%;
+    max-height: 80vh;
+}
+
+/* グリッドレイアウトのクラス（JSで切り替え） */
+.board.easy {
+    grid-template-columns: repeat(4, 1fr);
+    grid-template-rows: repeat(4, 1fr);
+}
+
+.board.normal {
+    grid-template-columns: repeat(5, 1fr);
+    grid-template-rows: repeat(4, 1fr);
+}
+
+.board.hard {
+    grid-template-columns: repeat(6, 1fr);
+    grid-template-rows: repeat(4, 1fr);
+}
+
+/* カードのスタイル */
+.card {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    cursor: pointer;
+    perspective: 1000px; /* 3D効果 */
+}
+
+.card-inner {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    transition: transform 0.5s cubic-bezier(0.4, 0.0, 0.2, 1);
+    -webkit-transform-style: preserve-3d;
+    transform-style: preserve-3d;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+.card.flipped .card-inner,
+.card.matched .card-inner {
+    -webkit-transform: rotateY(180deg);
+    transform: rotateY(180deg);
+}
+
+.card-front, .card-back {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+    border-radius: 10px;
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #fff;
+}
+
+.card-front {
+    /* 表面（ゲーム上は裏面・カバー画像） - 初期状態 */
+    -webkit-transform: rotateY(0deg);
+    transform: rotateY(0deg);
+    z-index: 2;
+}
+
+.card-front img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.card-back {
+    /* 裏面（絵柄が見える状態） - フリップ後 */
+    -webkit-transform: rotateY(180deg);
+    transform: rotateY(180deg);
+    z-index: 1;
+}
+
+.card-back img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* 一致したカードのエフェクト */
+.card.matched .card-inner {
+    box-shadow: 0 0 15px 5px rgba(255, 255, 153, 0.8);
+    animation: pulse 0.5s ease-in-out;
+}
+
+@keyframes pulse {
+    0% { -webkit-transform: rotateY(180deg) scale(1); transform: rotateY(180deg) scale(1); }
+    50% { -webkit-transform: rotateY(180deg) scale(1.05); transform: rotateY(180deg) scale(1.05); }
+    100% { -webkit-transform: rotateY(180deg) scale(1); transform: rotateY(180deg) scale(1); }
+}
+
+/* レスポンシブ対応（スマホ） */
+@media (max-width: 600px) {
+    .board {
+        gap: 5px;
+    }
+    
+    .modal-content h1 {
+        font-size: 2rem;
+    }
+    
+    header {
+        flex-direction: column;
+        gap: 10px;
+    }
+    
+    .stats {
+        width: 100%;
+        justify-content: space-around;
+    }
+    
+    /* スマホの場合はHardのグリッドを4x6に変更して縦長に収める */
+    .board.hard {
+        grid-template-columns: repeat(4, 1fr);
+        grid-template-rows: repeat(6, 1fr);
+    }
+}
